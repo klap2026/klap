@@ -50,3 +50,6 @@ next-env.d.ts
 
 # Playwright
 .playwright-mcp/
+
+# Local Netlify folder
+.netlify
