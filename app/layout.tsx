@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'TechFlow - Field Technician Scheduling',
+  title: 'Klap - Field Technician Scheduling',
   description: 'Mobile-first scheduling app for field technicians and customers',
 }
 

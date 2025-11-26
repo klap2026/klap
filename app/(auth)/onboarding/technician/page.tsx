@@ -43,7 +43,6 @@ export default function TechnicianOnboardingPage() {
 
   // Step 1: Basic Info
   const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
 
   // Step 2: Specializations
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>([])
@@ -124,7 +123,6 @@ export default function TechnicianOnboardingPage() {
         },
         body: JSON.stringify({
           name,
-          phone,
           specializations,
           workingHours,
         }),
@@ -173,14 +171,6 @@ export default function TechnicianOnboardingPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-              />
-
-              <Input
-                label="Contact Phone (optional)"
-                type="tel"
-                placeholder="+972501234567"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
               />
             </div>
 

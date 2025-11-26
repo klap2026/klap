@@ -9,7 +9,6 @@ export default function CustomerOnboardingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +35,6 @@ export default function CustomerOnboardingPage() {
         },
         body: JSON.stringify({
           name,
-          phone,
           address,
         }),
       })
@@ -68,14 +66,6 @@ export default function CustomerOnboardingPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-            />
-
-            <Input
-              label="Contact Phone (optional)"
-              type="tel"
-              placeholder="+972501234567"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
             />
 
             <div>

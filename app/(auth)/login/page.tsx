@@ -8,7 +8,7 @@ import { Modal } from '@/components/ui/Modal'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [phone, setPhone] = useState('+972')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [step, setStep] = useState<'phone' | 'otp'>('phone')
   const [isLoading, setIsLoading] = useState(false)
@@ -16,10 +16,12 @@ export default function LoginPage() {
   const [error, setError] = useState('')
 
   const handleSendOtp = async () => {
-    if (phone.length < 10) {
+    if (phoneNumber.length < 8) {
       setError('Please enter a valid phone number')
       return
     }
+
+    const phone = `+97205${phoneNumber}`
 
     setIsLoading(true)
     setError('')
@@ -80,6 +82,8 @@ export default function LoginPage() {
     setIsLoading(true)
     setError('')
 
+    const phone = `+97205${phoneNumber}`
+
     try {
       const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
@@ -123,7 +127,7 @@ export default function LoginPage() {
               <span className="text-4xl">🔧</span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">TechFlow</h1>
+          <h1 className="text-4xl font-bold text-white mb-2">Klap</h1>
           <p className="text-blue-200 text-lg">Field Technician Scheduling</p>
         </div>
 
@@ -136,16 +140,32 @@ export default function LoginPage() {
                 <p className="text-gray-600">Enter your phone number to continue</p>
               </div>
 
-              <Input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+972 50-123-4567"
-                error={error}
-                disabled={isLoading}
-                autoFocus
-                onKeyDown={(e) => e.key === 'Enter' && handleSendOtp()}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <div className="flex gap-2">
+                  <div className="bg-gray-100 px-4 py-3 rounded-lg border-2 border-gray-200 text-lg font-medium text-gray-700 flex items-center">
+                    05
+                  </div>
+                  <Input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '')
+                      if (value.length <= 8) {
+                        setPhoneNumber(value)
+                      }
+                    }}
+                    placeholder="8764115"
+                    error={error}
+                    disabled={isLoading}
+                    autoFocus
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendOtp()}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
 
               <Button
                 onClick={handleSendOtp}
@@ -162,7 +182,7 @@ export default function LoginPage() {
                 <h2 className="text-2xl font-bold text-primary-navy mb-2">Enter Code</h2>
                 <p className="text-gray-600">
                   We sent a 6-digit code to<br />
-                  <span className="font-semibold text-primary-navy">{phone}</span>
+                  <span className="font-semibold text-primary-navy">05-{phoneNumber}</span>
                 </p>
               </div>
 
