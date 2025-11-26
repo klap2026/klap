@@ -14,39 +14,40 @@ const supabase = createClient(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     // Delete related records first
     // Delete sessions
     await supabase
       .from('Session')
       .delete()
-      .eq('userId', params.id)
+      .eq('userId', id)
 
     // Delete OTP codes
     await supabase
       .from('OtpCode')
       .delete()
-      .eq('phone', (await supabase.from('User').select('phone').eq('id', params.id).single()).data?.phone || '')
+      .eq('phone', (await supabase.from('User').select('phone').eq('id', id).single()).data?.phone || '')
 
     // Delete technician profile if exists
     await supabase
       .from('Technician')
       .delete()
-      .eq('userId', params.id)
+      .eq('userId', id)
 
     // Delete customer profile if exists
     await supabase
       .from('Customer')
       .delete()
-      .eq('userId', params.id)
+      .eq('userId', id)
 
     // Delete user
     const { error } = await supabase
       .from('User')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       console.error('Error deleting user:', error)
