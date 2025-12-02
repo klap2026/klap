@@ -21,7 +21,7 @@ export async function signToken(payload: JwtPayload): Promise<string> {
 export async function verifyToken(token: string): Promise<JwtPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET)
-    return payload as JwtPayload
+    return payload as unknown as JwtPayload
   } catch (err) {
     console.log('[JWT] Verification failed:', (err as Error).message)
     return null

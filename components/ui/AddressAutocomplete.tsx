@@ -105,7 +105,7 @@ export function AddressAutocomplete({
       case 'Enter':
         e.preventDefault()
         if (selectedIndex >= 0 && selectedIndex < predictions.length) {
-          handleSelect(predictions[selectedIndex].place_id)
+          handleSelect(predictions[selectedIndex].placeId)
         }
         break
       case 'Escape':
