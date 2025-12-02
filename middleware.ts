@@ -28,8 +28,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Check for token in cookie
-  const token = request.cookies.get('auth-token')?.value
+  // Check for token in query string (development only) or cookie
+  let token: string | undefined
+
+  // Development only: Allow auth via query string for multi-tab testing
+  if (process.env.NODE_ENV === 'development') {
+    const queryToken = request.nextUrl.searchParams.get('token')
+    if (queryToken) {
+      token = queryToken
+    }
+  }
+
+  // Fall back to cookie-based auth
+  if (!token) {
+    token = request.cookies.get('auth-token')?.value
+  }
 
   if (!token) {
     // Redirect to login if no token
