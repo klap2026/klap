@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { signToken } from '@/lib/auth/jwt'
 import { setAuthCookie } from '@/lib/auth/cookies'
+import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,6 +24,22 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    // Rate limit by user ID (5 requests per minute)
+    const rateLimitResult = checkRateLimit(`update-role:${userId}`, {
+      windowMs: 60000, // 1 minute
+      max: 5,
+    })
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: getRateLimitHeaders(rateLimitResult),
+        }
       )
     }
 

@@ -1,7 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkRateLimit, getClientIp, getRateLimitHeaders } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit by IP address (30 requests per minute)
+    const clientIp = getClientIp(request)
+    const rateLimitResult = checkRateLimit(`places-autocomplete:${clientIp}`, {
+      windowMs: 60000, // 1 minute
+      max: 30,
+    })
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: getRateLimitHeaders(rateLimitResult),
+        }
+      )
+    }
+
     const body = await request.json()
     const { input, sessionToken } = body
 
