@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const token = cookieToken || headerToken
 
     if (token) {
-      const payload = verifyToken(token)
+      const payload = await verifyToken(token)
 
       if (payload) {
         // Invalidate session in database

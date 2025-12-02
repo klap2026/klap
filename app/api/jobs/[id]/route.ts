@@ -29,7 +29,7 @@ export async function GET(
       )
     }
 
-    const payload = verifyToken(token)
+    const payload = await verifyToken(token)
     if (!payload) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -83,7 +83,7 @@ export async function PATCH(
       )
     }
 
-    const payload = verifyToken(token)
+    const payload = await verifyToken(token)
     if (!payload) {
       return NextResponse.json(
         { error: 'Invalid token' },

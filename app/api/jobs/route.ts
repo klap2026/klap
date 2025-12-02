@@ -25,7 +25,7 @@ export async function GET(request: Request) {
       )
     }
 
-    const payload = verifyToken(token)
+    const payload = await verifyToken(token)
     if (!payload) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const payload = verifyToken(token)
+    const payload = await verifyToken(token)
     if (!payload) {
       return NextResponse.json(
         { error: 'Invalid token' },
