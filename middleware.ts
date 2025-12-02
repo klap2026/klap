@@ -65,14 +65,19 @@ export async function middleware(request: NextRequest) {
   // This allows navigation within the tab without needing ?token in every URL
   // Note: Cookies are shared across tabs, so the last tab you visit will set the active token
   if (tokenFromQuery && process.env.NODE_ENV === 'development') {
-    // Create a response that will set the cookie
+    // Add user info to headers for this request
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-user-id', payload.userId)
+    requestHeaders.set('x-user-role', payload.role || '')
+
+    // Create response with headers
     const response = NextResponse.next({
       request: {
-        headers: new Headers(request.headers),
+        headers: requestHeaders,
       },
     })
 
-    // Set as session cookie (expires when browser closes)
+    // Set session cookie on the response (expires when browser closes)
     response.cookies.set('auth-token', token, {
       httpOnly: true,
       secure: false, // Development only
@@ -81,17 +86,7 @@ export async function middleware(request: NextRequest) {
       // No maxAge = session cookie
     })
 
-    // Add user info to headers
-    const requestHeaders = new Headers(request.headers)
-    requestHeaders.set('x-user-id', payload.userId)
-    requestHeaders.set('x-user-role', payload.role || '')
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-      response,
-    })
+    return response
   }
 
   // Check role-based access
