@@ -198,14 +198,11 @@ export default function SchedulePage() {
             <span className="text-xs font-medium">Schedule</span>
           </button>
           <button
-            onClick={() => {
-              localStorage.removeItem('token')
-              router.push('/login')
-            }}
+            onClick={() => router.push('/tech-profile')}
             className="flex flex-col items-center gap-1 text-gray-400"
           >
-            <span className="text-2xl">🚪</span>
-            <span className="text-xs font-medium">Logout</span>
+            <span className="text-2xl">👤</span>
+            <span className="text-xs font-medium">Profile</span>
           </button>
         </div>
       </div>

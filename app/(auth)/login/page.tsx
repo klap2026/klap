@@ -145,14 +145,14 @@ export default function LoginPage() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-primary-navy mb-2">{t('welcome')}</h2>
-                <p className="text-gray-600">Enter your phone number to continue</p>
+                <p className="text-gray-600">{t('enterPhonePrompt')}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('phoneNumber')}
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-2" dir="ltr">
                   <div className="bg-gray-100 px-4 py-3 rounded-lg border-2 border-gray-200 text-lg font-medium text-gray-700 flex items-center">
                     05
                   </div>
@@ -189,12 +189,12 @@ export default function LoginPage() {
               <div>
                 <h2 className="text-2xl font-bold text-primary-navy mb-2">{t('enterCode')}</h2>
                 <p className="text-gray-600">
-                  We sent a 6-digit code to<br />
-                  <span className="font-semibold text-primary-navy">05-{phoneNumber}</span>
+                  {t('codeSentTo')}<br />
+                  <span className="font-semibold text-primary-navy" dir="ltr">05-{phoneNumber}</span>
                 </p>
               </div>
 
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-2 justify-center" dir="ltr">
                 {otp.map((digit, index) => (
                   <input
                     key={index}

@@ -127,3 +127,60 @@ export async function GET(request: Request) {
     )
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    const payload = verifyToken(token)
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      )
+    }
+
+    const updateData = await request.json()
+
+    // Build update object with only provided fields
+    const updates: any = {
+      updatedAt: new Date().toISOString(),
+    }
+
+    if (updateData.name !== undefined) updates.name = updateData.name
+    if (updateData.address !== undefined) updates.address = updateData.address
+
+    // Update customer profile
+    const { data: customer, error } = await supabase
+      .from('Customer')
+      .update(updates)
+      .eq('userId', payload.userId)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error updating customer:', error)
+      throw error
+    }
+
+    return NextResponse.json({
+      success: true,
+      customer,
+    })
+
+  } catch (error) {
+    console.error('Update customer error:', error)
+    return NextResponse.json(
+      { error: 'Failed to update customer profile' },
+      { status: 500 }
+    )
+  }
+}

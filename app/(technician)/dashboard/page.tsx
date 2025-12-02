@@ -219,14 +219,11 @@ export default function TechnicianDashboard() {
             <span className="text-xs font-medium">{t('schedule')}</span>
           </button>
           <button
-            onClick={() => {
-              localStorage.removeItem('token')
-              router.push('/login')
-            }}
+            onClick={() => router.push('/tech-profile')}
             className="flex flex-col items-center gap-1 text-gray-400"
           >
-            <span className="text-2xl">🚪</span>
-            <span className="text-xs font-medium">{t('logout')}</span>
+            <span className="text-2xl">👤</span>
+            <span className="text-xs font-medium">{t('profile')}</span>
           </button>
         </div>
       </div>

@@ -149,7 +149,7 @@ export default function TechnicianOnboardingPage() {
         {/* Progress Indicator */}
         <div className="mb-8 pt-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-600">Step {step} of 3</span>
+            <span className="text-sm font-medium text-gray-600">{t('step')} {step} {t('of')} 3</span>
             <span className="text-sm font-medium text-accent-orange">{Math.round((step / 3) * 100)}%</span>
           </div>
           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -169,7 +169,7 @@ export default function TechnicianOnboardingPage() {
             <div className="space-y-4">
               <Input
                 label={t('yourName')}
-                placeholder="Enter your full name"
+                placeholder={t('enterFullName')}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -207,8 +207,8 @@ export default function TechnicianOnboardingPage() {
             </div>
 
             <Input
-              label="Other Specialization"
-              placeholder="Enter if not listed above"
+              label={t('otherSpecialization')}
+              placeholder={t('enterIfNotListed')}
               value={otherSpec}
               onChange={(e) => setOtherSpec(e.target.value)}
             />
@@ -251,7 +251,7 @@ export default function TechnicianOnboardingPage() {
                   {workingHours[day.id].enabled && (
                     <div className="mt-3 ml-15 flex gap-3">
                       <div className="flex-1">
-                        <label className="block text-xs text-gray-500 mb-1">Start</label>
+                        <label className="block text-xs text-gray-500 mb-1">{t('start')}</label>
                         <input
                           type="time"
                           value={workingHours[day.id].start}
@@ -260,7 +260,7 @@ export default function TechnicianOnboardingPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <label className="block text-xs text-gray-500 mb-1">End</label>
+                        <label className="block text-xs text-gray-500 mb-1">{t('end')}</label>
                         <input
                           type="time"
                           value={workingHours[day.id].end}

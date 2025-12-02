@@ -6,12 +6,18 @@ export const translations = {
     submit: "Submit",
     cancel: "Cancel",
     logout: "Logout",
+    step: "Step",
+    of: "of",
+    start: "Start",
+    end: "End",
 
     // Auth
     welcome: "Welcome",
     phoneNumber: "Phone Number",
+    enterPhonePrompt: "Enter your phone number to continue",
     sendCode: "Send Code",
     enterCode: "Enter Code",
+    codeSentTo: "We sent a 6-digit code to",
     verify: "Verify",
     changePhoneNumber: "Change phone number",
 
@@ -23,8 +29,11 @@ export const translations = {
     customerDescription: "I need to book services",
     setupProfile: "Let's set up your profile",
     yourName: "Your Name",
+    enterFullName: "Enter your full name",
     yourSpecializations: "Your Specializations",
     selectAllApply: "Select all that apply",
+    otherSpecialization: "Other Specialization",
+    enterIfNotListed: "Enter if not listed above",
     workingHours: "Working Hours",
     setAvailability: "Set your availability",
     defaultAddress: "Default Address",
@@ -83,6 +92,10 @@ export const translations = {
     noRequests: "No service requests yet",
     home: "Home",
     jobs: "Jobs",
+    trackYourJobs: "Request service and track your jobs",
+    describeServicePlaceholder: "Describe the service you need (e.g., 'AC not cooling', 'Need AC installation')",
+    jobHistoryWillAppear: "Your job history will appear here",
+    scheduled: "Scheduled",
 
     // Status
     newRequest: "New Request",
@@ -101,6 +114,18 @@ export const translations = {
     customers: "Customers",
     allUsers: "All Users",
     delete: "Delete",
+
+    // Profile
+    profile: "Profile",
+    editProfile: "Edit Profile",
+    edit: "Edit",
+    save: "Save",
+    name: "Name",
+    workAddress: "Work Address",
+    specializations: "Specializations",
+    availability: "Availability",
+    settings: "Settings",
+    language: "Language",
   },
 
   he: {
@@ -110,12 +135,18 @@ export const translations = {
     submit: "שליחה",
     cancel: "ביטול",
     logout: "התנתקות",
+    step: "שלב",
+    of: "מתוך",
+    start: "התחלה",
+    end: "סיום",
 
     // Auth
     welcome: "ברוכים הבאים",
     phoneNumber: "מספר טלפון",
+    enterPhonePrompt: "להזין מספר טלפון להמשך",
     sendCode: "שליחת קוד",
     enterCode: "הזנת קוד",
+    codeSentTo: "שלחנו קוד בן 6 ספרות ל",
     verify: "אימות",
     changePhoneNumber: "שינוי מספר טלפון",
 
@@ -127,8 +158,11 @@ export const translations = {
     customerDescription: "לקבוע תורים לשירותים",
     setupProfile: "הגדרת הפרופיל",
     yourName: "שם",
+    enterFullName: "להזין שם מלא",
     yourSpecializations: "תחומי התמחות",
     selectAllApply: "בחירת כל התחומים הרלוונטיים",
+    otherSpecialization: "התמחות אחרת",
+    enterIfNotListed: "להזין אם לא מופיע ברשימה",
     workingHours: "שעות עבודה",
     setAvailability: "הגדרת זמינות",
     defaultAddress: "כתובת ברירת מחדל",
@@ -187,6 +221,10 @@ export const translations = {
     noRequests: "אין בקשות שירות עדיין",
     home: "בית",
     jobs: "משימות",
+    trackYourJobs: "הזמנת שירות ומעקב אחרי המשימות שלך",
+    describeServicePlaceholder: "תאר את השירות שאתה צריך (לדוגמה: 'המזגן לא מקרר', 'צריך התקנת מזגן')",
+    jobHistoryWillAppear: "היסטוריית המשימות שלך תופיע כאן",
+    scheduled: "מתוזמן",
 
     // Status
     newRequest: "בקשה חדשה",
@@ -205,6 +243,18 @@ export const translations = {
     customers: "לקוחות",
     allUsers: "כל המשתמשים",
     delete: "מחיקה",
+
+    // Profile
+    profile: "פרופיל",
+    editProfile: "עריכת פרופיל",
+    edit: "עריכה",
+    save: "שמירה",
+    name: "שם",
+    workAddress: "כתובת עבודה",
+    specializations: "התמחויות",
+    availability: "זמינות",
+    settings: "הגדרות",
+    language: "שפה",
   }
 } as const;
 

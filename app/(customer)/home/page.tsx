@@ -134,7 +134,7 @@ export default function CustomerHome() {
       <div className="bg-gradient-to-br from-accent-orange to-orange-600 text-white p-6 pb-8">
         <div className="max-w-md mx-auto">
           <h1 className="text-2xl font-bold mb-1">{t('greeting', { name: customer?.name || 'Customer' })}</h1>
-          <p className="text-orange-100 text-sm">Request service and track your jobs</p>
+          <p className="text-orange-100 text-sm">{t('trackYourJobs')}</p>
         </div>
       </div>
 
@@ -170,7 +170,7 @@ export default function CustomerHome() {
                   {t('whatNeed')} <span className="text-status-danger">*</span>
                 </label>
                 <textarea
-                  placeholder="Describe the service you need (e.g., 'AC not cooling', 'Need AC installation')"
+                  placeholder={t('describeServicePlaceholder')}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required
@@ -207,7 +207,7 @@ export default function CustomerHome() {
             <Card className="text-center py-8">
               <div className="text-4xl mb-2">📋</div>
               <p className="text-gray-500">{t('noRequests')}</p>
-              <p className="text-sm text-gray-400 mt-1">Your job history will appear here</p>
+              <p className="text-sm text-gray-400 mt-1">{t('jobHistoryWillAppear')}</p>
             </Card>
           ) : (
             <div className="space-y-3">
@@ -223,7 +223,7 @@ export default function CustomerHome() {
                   <p className="text-xs text-gray-500">📍 {job.address}</p>
                   {job.scheduledStart && (
                     <p className="text-xs font-semibold text-accent-orange mt-2">
-                      Scheduled: {format(new Date(job.scheduledStart), 'MMM d, h:mm a')}
+                      {t('scheduled')}: {format(new Date(job.scheduledStart), 'MMM d, h:mm a')}
                     </p>
                   )}
                 </Card>
@@ -245,14 +245,11 @@ export default function CustomerHome() {
             <span className="text-xs font-medium">{t('jobs')}</span>
           </button>
           <button
-            onClick={() => {
-              localStorage.removeItem('token')
-              router.push('/login')
-            }}
+            onClick={() => router.push('/customer-profile')}
             className="flex flex-col items-center gap-1 text-gray-400"
           >
-            <span className="text-2xl">🚪</span>
-            <span className="text-xs font-medium">{t('logout')}</span>
+            <span className="text-2xl">👤</span>
+            <span className="text-xs font-medium">{t('profile')}</span>
           </button>
         </div>
       </div>

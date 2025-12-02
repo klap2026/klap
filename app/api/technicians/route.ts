@@ -126,3 +126,62 @@ export async function GET(request: Request) {
     )
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    const payload = verifyToken(token)
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      )
+    }
+
+    const updateData = await request.json()
+
+    // Build update object with only provided fields
+    const updates: any = {
+      updatedAt: new Date().toISOString(),
+    }
+
+    if (updateData.name !== undefined) updates.name = updateData.name
+    if (updateData.workAddress !== undefined) updates.workAddress = updateData.workAddress
+    if (updateData.specializations !== undefined) updates.specializations = updateData.specializations
+    if (updateData.workingHours !== undefined) updates.workingHours = updateData.workingHours
+
+    // Update technician profile
+    const { data: technician, error } = await supabase
+      .from('Technician')
+      .update(updates)
+      .eq('userId', payload.userId)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error updating technician:', error)
+      throw error
+    }
+
+    return NextResponse.json({
+      success: true,
+      technician,
+    })
+
+  } catch (error) {
+    console.error('Update technician error:', error)
+    return NextResponse.json(
+      { error: 'Failed to update technician profile' },
+      { status: 500 }
+    )
+  }
+}
