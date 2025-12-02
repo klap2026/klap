@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete'
 import { Chip } from '@/components/ui/Chip'
 import { Toggle } from '@/components/ui/Toggle'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
@@ -250,13 +251,12 @@ export default function TechnicianProfilePage() {
 
           {editingAddress ? (
             <div className="space-y-4">
-              <textarea
-                value={workAddress}
-                onChange={(e) => setWorkAddress(e.target.value)}
+              <AddressAutocomplete
                 placeholder={t('address')}
-                rows={3}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-orange-200"
-                autoFocus
+                initialValue={workAddress}
+                onSelect={(parsedAddress) => {
+                  setWorkAddress(parsedAddress.formattedAddress)
+                }}
               />
               <div className="flex gap-2">
                 <Button
