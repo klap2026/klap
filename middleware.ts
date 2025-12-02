@@ -30,12 +30,14 @@ export async function middleware(request: NextRequest) {
 
   // Check for token in query string (development only) or cookie
   let token: string | undefined
+  let tokenFromQuery = false
 
   // Development only: Allow auth via query string for multi-tab testing
   if (process.env.NODE_ENV === 'development') {
     const queryToken = request.nextUrl.searchParams.get('token')
     if (queryToken) {
       token = queryToken
+      tokenFromQuery = true
     }
   }
 
@@ -57,6 +59,39 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.redirect(new URL('/login', request.url))
     response.cookies.delete('auth-token')
     return response
+  }
+
+  // If token came from query string in dev mode, set it as a session cookie
+  // This allows navigation within the tab without needing ?token in every URL
+  // Note: Cookies are shared across tabs, so the last tab you visit will set the active token
+  if (tokenFromQuery && process.env.NODE_ENV === 'development') {
+    // Create a response that will set the cookie
+    const response = NextResponse.next({
+      request: {
+        headers: new Headers(request.headers),
+      },
+    })
+
+    // Set as session cookie (expires when browser closes)
+    response.cookies.set('auth-token', token, {
+      httpOnly: true,
+      secure: false, // Development only
+      sameSite: 'lax',
+      path: '/',
+      // No maxAge = session cookie
+    })
+
+    // Add user info to headers
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-user-id', payload.userId)
+    requestHeaders.set('x-user-role', payload.role || '')
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+      response,
+    })
   }
 
   // Check role-based access

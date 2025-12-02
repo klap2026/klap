@@ -88,19 +88,29 @@ node scripts/generate-token.mjs
 
 ## Quick Multi-Tab Setup Workflow
 
+### Important: Multi-User Testing
+
+When you visit a URL with `?token=...`, the middleware automatically sets a session cookie. This means:
+- ✅ You can navigate freely without needing the token in every URL
+- ⚠️ **Cookies are shared across all tabs** - you can't have two different users in regular tabs
+
+**For true multi-user testing:**
 ```bash
-# 1. Generate tokens for two different users
+# 1. Generate tokens
 node scripts/generate-token.mjs +972501111111  # Technician
 node scripts/generate-token.mjs +972502222222  # Customer
 
-# 2. Copy the tokens from output
-
-# 3. Open tabs:
+# 2. Open FIRST user in a REGULAR window
 open "http://localhost:3000/dashboard?token=<TECH_TOKEN>"
-open "http://localhost:3000/home?token=<CUSTOMER_TOKEN>"
 
-# 4. Now you have two tabs with different auth!
+# 3. Open SECOND user in an INCOGNITO window
+open -na "Google Chrome" --args --incognito "http://localhost:3000/home?token=<CUSTOMER_TOKEN>"
+# OR use a different browser for the second user
+
+# 4. Now you can test as both users without interference!
 ```
+
+**Why?** Browser cookies are shared across all tabs, so the last tab you visit sets the auth for ALL tabs.
 
 ## Troubleshooting
 
