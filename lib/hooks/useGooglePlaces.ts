@@ -57,6 +57,12 @@ export function useGooglePlaces({ onSelect }: UseGooglePlacesOptions) {
         return
       }
 
+      // Wait for session token to be ready
+      if (!sessionToken) {
+        console.log('[useGooglePlaces] Session token not ready yet, skipping fetch')
+        return
+      }
+
       // Cancel previous request
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
