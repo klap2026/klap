@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { addMinutes } from 'date-fns'
+import { sendOtpSms } from '@/lib/twilio/sms'
 
 const OTP_EXPIRY_MINUTES = parseInt(process.env.OTP_EXPIRY_MINUTES || '5')
 const OTP_MODE = process.env.OTP_MODE || 'mock'
@@ -45,7 +46,18 @@ export async function createOtpCode(phone: string): Promise<{ code: string; mock
     return { code, mockCode: code }
   }
 
-  // In production, send via WhatsApp Business API here
+  // In production, send via Twilio SMS
+  if (OTP_MODE === 'production') {
+    const result = await sendOtpSms(phone, code)
+
+    if (!result.success) {
+      console.error('Failed to send OTP SMS:', result.error)
+      throw new Error('Failed to send OTP SMS')
+    }
+
+    console.log('OTP SMS sent successfully:', result.messageSid)
+  }
+
   return { code }
 }
 
