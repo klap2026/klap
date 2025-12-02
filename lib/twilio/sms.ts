@@ -26,6 +26,14 @@ interface SendSmsResult {
 export async function sendSms(options: SendSmsOptions): Promise<SendSmsResult> {
   const { to, body } = options
 
+  if (!TWILIO_ACCOUNT_SID) {
+    console.error('TWILIO_ACCOUNT_SID is not configured')
+    return {
+      success: false,
+      error: 'Twilio is not configured',
+    }
+  }
+
   if (!TWILIO_AUTH_TOKEN) {
     console.error('TWILIO_AUTH_TOKEN is not configured')
     return {
