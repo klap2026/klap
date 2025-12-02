@@ -106,12 +106,7 @@ export default function TechnicianOnboardingPage() {
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
+      // Cookie is sent automatically - no need to check token
       const specializations = [...selectedSpecs]
       if (otherSpec) {
         specializations.push(otherSpec)
@@ -121,7 +116,6 @@ export default function TechnicianOnboardingPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           name,

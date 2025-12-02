@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete'
+import { ParsedAddress } from '@/lib/hooks'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function CustomerOnboardingPage() {
@@ -11,33 +13,32 @@ export default function CustomerOnboardingPage() {
   const { t } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
-  const [address, setAddress] = useState('')
+  const [addressData, setAddressData] = useState<ParsedAddress | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!name || !address) {
+    if (!name || !addressData) {
       alert('Please fill in all required fields')
       return
     }
 
     setLoading(true)
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
+      // Cookie is sent automatically - no need to check token
       const response = await fetch('/api/customers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           name,
-          address,
+          address: addressData.formattedAddress,
+          lat: addressData.lat,
+          lng: addressData.lng,
+          city: addressData.city,
+          street: addressData.street,
+          streetNumber: addressData.streetNumber,
         }),
       })
 
@@ -70,26 +71,12 @@ export default function CustomerOnboardingPage() {
               required
             />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('defaultAddress')} <span className="text-status-danger">*</span>
-              </label>
-              <textarea
-                placeholder="Enter your address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-                rows={3}
-                className="
-                  w-full px-4 py-3 rounded-lg border-2 border-gray-200
-                  focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-orange-200
-                  text-lg
-                "
-              />
-              <p className="mt-2 text-sm text-gray-500">
-                This will be used as your default service location
-              </p>
-            </div>
+            <AddressAutocomplete
+              label={t('defaultAddress')}
+              placeholder="הזן כתובת..."
+              onSelect={(address) => setAddressData(address)}
+              required
+            />
 
             <Button
               type="submit"

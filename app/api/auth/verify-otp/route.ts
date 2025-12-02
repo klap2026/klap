@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { verifyOtpCode } from '@/lib/auth/otp'
 import { signToken } from '@/lib/auth/jwt'
+import { setAuthCookie } from '@/lib/auth/cookies'
+import { isRateLimited, clearRateLimit, RATE_LIMITS } from '@/lib/auth/rateLimit'
 import { createClient } from '@supabase/supabase-js'
 
 export async function POST(request: Request) {
@@ -11,6 +13,18 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Phone and code are required' },
         { status: 400 }
+      )
+    }
+
+    // Check rate limit
+    const rateLimitCheck = isRateLimited(`verify-otp:${phone}`, RATE_LIMITS.verifyOtp)
+    if (rateLimitCheck.limited) {
+      return NextResponse.json(
+        {
+          error: 'Too many verification attempts. Please try again later.',
+          retryAfter: rateLimitCheck.retryAfter,
+        },
+        { status: 429 }
       )
     }
 
@@ -61,7 +75,7 @@ export async function POST(request: Request) {
     }
 
     // Generate JWT
-    const token = signToken({
+    const token = await signToken({
       userId: user.id,
       phone: user.phone,
       role: user.role,
@@ -76,15 +90,22 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(),
     })
 
-    return NextResponse.json({
+    // Clear rate limit on successful authentication
+    clearRateLimit(`send-otp:${phone}`)
+    clearRateLimit(`verify-otp:${phone}`)
+
+    const response = NextResponse.json({
       success: true,
-      token,
+      token, // Still return token for backward compatibility during transition
       user: {
         id: user.id,
         phone: user.phone,
         role: user.role,
       },
     })
+
+    // Set HTTP-only cookie for secure authentication
+    return setAuthCookie(response, token)
 
   } catch (error) {
     console.error('Verify OTP error:', error)

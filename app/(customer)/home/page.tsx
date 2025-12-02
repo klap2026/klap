@@ -35,17 +35,9 @@ export default function CustomerHome() {
 
   useEffect(() => {
     const loadData = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       try {
-        // Get customer profile
-        const res = await fetch('/api/auth/me', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        // Get customer profile (cookie sent automatically)
+        const res = await fetch('/api/auth/me')
         const data = await res.json()
 
         if (!data.customer) {
@@ -56,9 +48,7 @@ export default function CustomerHome() {
         setCustomer(data.customer)
 
         // Get customer's jobs
-        const jobsRes = await fetch(`/api/jobs?customerId=${data.customer.id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        const jobsRes = await fetch(`/api/jobs?customerId=${data.customer.id}`)
         const jobsData = await jobsRes.json()
 
         if (jobsData.jobs) {
@@ -84,12 +74,10 @@ export default function CustomerHome() {
 
     setSubmitting(true)
     try {
-      const token = localStorage.getItem('token')
       const res = await fetch('/api/jobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           customerId: customer?.id,

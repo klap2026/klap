@@ -100,8 +100,8 @@ export default function LoginPage() {
         throw new Error(data.error || 'Invalid code')
       }
 
-      // Store token
-      localStorage.setItem('token', data.token)
+      // Token is automatically set as HTTP-only cookie by the server
+      // No need to store in localStorage (security improvement)
 
       // Route based on user role
       if (!data.user.role) {

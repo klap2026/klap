@@ -30,16 +30,8 @@ export default function CustomerProfilePage() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       try {
-        const res = await fetch('/api/auth/me', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        const res = await fetch('/api/auth/me')
         const data = await res.json()
 
         if (!data.customer) {
@@ -63,12 +55,6 @@ export default function CustomerProfilePage() {
   const handleSave = async (field: 'name' | 'address') => {
     setSaving(true)
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       const updateData: any = {}
 
       if (field === 'name') {
@@ -81,7 +67,6 @@ export default function CustomerProfilePage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(updateData)
       })
@@ -115,8 +100,8 @@ export default function CustomerProfilePage() {
     )
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/login')
   }
 

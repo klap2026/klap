@@ -66,16 +66,8 @@ export default function TechnicianProfilePage() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       try {
-        const res = await fetch('/api/technicians', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        const res = await fetch('/api/technicians')
         const data = await res.json()
 
         if (!data.technician) {
@@ -101,12 +93,6 @@ export default function TechnicianProfilePage() {
   const handleSave = async (field: 'name' | 'address' | 'specs' | 'hours') => {
     setSaving(true)
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       const updateData: any = {}
 
       if (field === 'name') {
@@ -123,7 +109,6 @@ export default function TechnicianProfilePage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(updateData)
       })
@@ -181,8 +166,8 @@ export default function TechnicianProfilePage() {
     )
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/login')
   }
 

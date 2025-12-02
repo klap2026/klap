@@ -9,19 +9,11 @@ export default function OnboardingPage() {
   const { t } = useLanguage()
 
   const handleSelectRole = async (role: 'technician' | 'customer') => {
-    const token = localStorage.getItem('token')
-
-    if (!token) {
-      router.push('/login')
-      return
-    }
-
-    // Update user role
+    // Update user role (cookie is sent automatically)
     await fetch('/api/auth/update-role', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ role }),
     })

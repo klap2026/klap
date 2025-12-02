@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { verifyToken } from '@/lib/auth/jwt'
 import { createClient } from '@supabase/supabase-js'
+import { signToken } from '@/lib/auth/jwt'
+import { setAuthCookie } from '@/lib/auth/cookies'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,21 +16,12 @@ const supabase = createClient(
 
 export async function POST(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    // Read token from cookie (set by middleware in headers)
+    const userId = request.headers.get('x-user-id')
 
-    if (!token) {
+    if (!userId) {
       return NextResponse.json(
-        { error: 'No token provided' },
-        { status: 401 }
-      )
-    }
-
-    const payload = verifyToken(token)
-
-    if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
+        { error: 'Unauthorized' },
         { status: 401 }
       )
     }
@@ -46,7 +38,7 @@ export async function POST(request: Request) {
     const { data: user, error } = await supabase
       .from('User')
       .update({ role, updatedAt: new Date().toISOString() })
-      .eq('id', payload.userId)
+      .eq('id', userId)
       .select()
       .single()
 
@@ -55,7 +47,17 @@ export async function POST(request: Request) {
       throw error
     }
 
-    return NextResponse.json({ success: true, user })
+    // Generate new JWT with updated role
+    const token = await signToken({
+      userId: user.id,
+      phone: user.phone,
+      role: user.role,
+    })
+
+    const response = NextResponse.json({ success: true, user })
+
+    // Update cookie with new JWT containing the role
+    return setAuthCookie(response, token)
   } catch (error) {
     console.error('Update role error:', error)
     return NextResponse.json(

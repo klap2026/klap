@@ -39,16 +39,8 @@ export default function JobDetailsPage() {
 
   useEffect(() => {
     const loadJob = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       try {
-        const res = await fetch(`/api/jobs/${params.id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        const res = await fetch(`/api/jobs/${params.id}`)
         const data = await res.json()
 
         if (data.job) {
@@ -69,12 +61,10 @@ export default function JobDetailsPage() {
 
     setUpdating(true)
     try {
-      const token = localStorage.getItem('token')
       const res = await fetch(`/api/jobs/${job.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ status: newStatus })
       })

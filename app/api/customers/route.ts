@@ -15,20 +15,12 @@ const supabase = createClient(
 
 export async function POST(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    // Get user ID from middleware headers
+    const userId = request.headers.get('x-user-id')
 
-    if (!token) {
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
         { status: 401 }
       )
     }
@@ -47,9 +39,9 @@ export async function POST(request: Request) {
       .from('Customer')
       .insert({
         id: crypto.randomUUID(),
-        userId: payload.userId,
+        userId: userId,
         name,
-        phone: phone || payload.phone,
+        phone: phone || null,
         address,
         lat: lat || null,
         lng: lng || null,
@@ -80,20 +72,12 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    // Get user ID from middleware headers
+    const userId = request.headers.get('x-user-id')
 
-    if (!token) {
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
         { status: 401 }
       )
     }
@@ -102,7 +86,7 @@ export async function GET(request: Request) {
     const { data: customer, error } = await supabase
       .from('Customer')
       .select('*')
-      .eq('userId', payload.userId)
+      .eq('userId', userId)
       .single()
 
     if (error) {
@@ -130,20 +114,12 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    // Get user ID from middleware headers
+    const userId = request.headers.get('x-user-id')
 
-    if (!token) {
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
         { status: 401 }
       )
     }
@@ -162,7 +138,7 @@ export async function PUT(request: Request) {
     const { data: customer, error } = await supabase
       .from('Customer')
       .update(updates)
-      .eq('userId', payload.userId)
+      .eq('userId', userId)
       .select()
       .single()
 

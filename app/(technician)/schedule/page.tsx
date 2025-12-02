@@ -30,17 +30,9 @@ export default function SchedulePage() {
 
   useEffect(() => {
     const loadData = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        router.push('/login')
-        return
-      }
-
       try {
-        // Get technician profile
-        const techRes = await fetch('/api/technicians', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        // Get technician profile (cookie sent automatically)
+        const techRes = await fetch('/api/technicians')
         const techData = await techRes.json()
 
         if (!techData.technician) {
@@ -51,9 +43,7 @@ export default function SchedulePage() {
         setTechnician(techData.technician)
 
         // Get all jobs for this technician
-        const jobsRes = await fetch(`/api/jobs?technicianId=${techData.technician.id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        const jobsRes = await fetch(`/api/jobs?technicianId=${techData.technician.id}`)
         const jobsData = await jobsRes.json()
 
         if (jobsData.jobs) {
