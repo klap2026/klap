@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { format } from 'date-fns'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 type Job = {
   id: string
@@ -31,6 +32,7 @@ type Job = {
 export default function JobDetailsPage() {
   const router = useRouter()
   const params = useParams()
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [job, setJob] = useState<Job | null>(null)
@@ -133,9 +135,9 @@ export default function JobDetailsPage() {
             onClick={() => router.back()}
             className="text-blue-200 mb-4 flex items-center gap-2"
           >
-            <span>←</span> Back
+            <span>←</span> {t('back')}
           </button>
-          <h1 className="text-2xl font-bold mb-2">Job Details</h1>
+          <h1 className="text-2xl font-bold mb-2">{t('jobDetails')}</h1>
           <StatusBadge status={job.status as any} />
         </div>
       </div>
@@ -152,7 +154,7 @@ export default function JobDetailsPage() {
                 size="sm"
                 className="flex-1"
               >
-                📞 Call
+                📞 {t('call')}
               </Button>
               <Button
                 onClick={openMaps}
@@ -160,7 +162,7 @@ export default function JobDetailsPage() {
                 variant="secondary"
                 className="flex-1"
               >
-                📍 Navigate
+                📍 {t('navigate')}
               </Button>
             </div>
           </div>
@@ -168,25 +170,25 @@ export default function JobDetailsPage() {
 
         {/* Job Details */}
         <Card className="mb-4">
-          <h2 className="font-bold text-primary-navy mb-3">Job Information</h2>
+          <h2 className="font-bold text-primary-navy mb-3">{t('jobInformation')}</h2>
           <div className="space-y-3">
             {job.category && (
               <div>
-                <p className="text-xs text-gray-500 mb-1">Category</p>
+                <p className="text-xs text-gray-500 mb-1">{t('category')}</p>
                 <p className="text-sm font-medium">{job.category}</p>
               </div>
             )}
             <div>
-              <p className="text-xs text-gray-500 mb-1">Description</p>
+              <p className="text-xs text-gray-500 mb-1">{t('description')}</p>
               <p className="text-sm">{job.description}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 mb-1">Address</p>
+              <p className="text-xs text-gray-500 mb-1">{t('address')}</p>
               <p className="text-sm">{job.address}</p>
             </div>
             {job.scheduledStart && (
               <div>
-                <p className="text-xs text-gray-500 mb-1">Scheduled Time</p>
+                <p className="text-xs text-gray-500 mb-1">{t('scheduledTime')}</p>
                 <p className="text-sm font-semibold">
                   {format(new Date(job.scheduledStart), 'EEEE, MMMM d, yyyy • h:mm a')}
                 </p>
@@ -198,7 +200,7 @@ export default function JobDetailsPage() {
         {/* Photos */}
         {job.photos && job.photos.length > 0 && (
           <Card className="mb-4">
-            <h2 className="font-bold text-primary-navy mb-3">Photos</h2>
+            <h2 className="font-bold text-primary-navy mb-3">{t('photos')}</h2>
             <div className="grid grid-cols-2 gap-2">
               {job.photos.map((photo, index) => (
                 <img
@@ -214,7 +216,7 @@ export default function JobDetailsPage() {
 
         {/* Status Actions */}
         <Card>
-          <h2 className="font-bold text-primary-navy mb-3">Update Status</h2>
+          <h2 className="font-bold text-primary-navy mb-3">{t('updateStatus')}</h2>
           <div className="space-y-2">
             {job.status === 'confirmed' && (
               <Button
@@ -222,7 +224,7 @@ export default function JobDetailsPage() {
                 className="w-full"
                 isLoading={updating}
               >
-                🚗 Mark as En Route
+                🚗 {t('markEnRoute')}
               </Button>
             )}
             {job.status === 'en_route' && (
@@ -231,7 +233,7 @@ export default function JobDetailsPage() {
                 className="w-full"
                 isLoading={updating}
               >
-                📍 Mark as Arrived
+                📍 {t('markArrived')}
               </Button>
             )}
             {job.status === 'arrived' && (
@@ -241,13 +243,13 @@ export default function JobDetailsPage() {
                 variant="secondary"
                 isLoading={updating}
               >
-                ✅ Mark as Completed
+                ✅ {t('markCompleted')}
               </Button>
             )}
             {job.status === 'completed' && (
               <div className="text-center py-4">
                 <div className="text-4xl mb-2">✅</div>
-                <p className="text-status-success font-semibold">Job Completed!</p>
+                <p className="text-status-success font-semibold">{t('completed')}!</p>
               </div>
             )}
           </div>

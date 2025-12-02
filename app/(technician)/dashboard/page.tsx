@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { format, isToday, isTomorrow } from 'date-fns'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 type Job = {
   id: string
@@ -25,6 +26,7 @@ type Technician = {
 
 export default function TechnicianDashboard() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(true)
   const [technician, setTechnician] = useState<Technician | null>(null)
   const [todayJobs, setTodayJobs] = useState<Job[]>([])
@@ -107,7 +109,7 @@ export default function TechnicianDashboard() {
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-navy to-blue-900 text-white p-6 pb-8">
         <div className="max-w-md mx-auto">
-          <h1 className="text-2xl font-bold mb-1">Hey, {technician?.name || 'Technician'}! 👋</h1>
+          <h1 className="text-2xl font-bold mb-1">{t('greeting', { name: technician?.name || 'Technician' })}</h1>
           <p className="text-blue-200 text-sm">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
         </div>
       </div>
@@ -117,7 +119,7 @@ export default function TechnicianDashboard() {
         {pendingRequests.length > 0 && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold text-primary-navy">New Requests</h2>
+              <h2 className="text-lg font-bold text-primary-navy">{t('newRequests')}</h2>
               <span className="bg-accent-orange text-white text-xs font-bold px-2 py-1 rounded-full">
                 {pendingRequests.length}
               </span>
@@ -143,11 +145,11 @@ export default function TechnicianDashboard() {
 
         {/* Today's Jobs */}
         <div className="mb-6">
-          <h2 className="text-lg font-bold text-primary-navy mb-3">Today's Schedule</h2>
+          <h2 className="text-lg font-bold text-primary-navy mb-3">{t('todaySchedule')}</h2>
           {todayJobs.length === 0 ? (
             <Card className="text-center py-8">
               <div className="text-4xl mb-2">☀️</div>
-              <p className="text-gray-500">No jobs scheduled for today</p>
+              <p className="text-gray-500">{t('noJobsToday')}</p>
             </Card>
           ) : (
             <div className="space-y-3">
@@ -176,7 +178,7 @@ export default function TechnicianDashboard() {
         {/* Upcoming Jobs */}
         {upcomingJobs.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-primary-navy mb-3">Upcoming</h2>
+            <h2 className="text-lg font-bold text-primary-navy mb-3">{t('upcoming')}</h2>
             <div className="space-y-3">
               {upcomingJobs.map(job => (
                 <Card
@@ -207,14 +209,14 @@ export default function TechnicianDashboard() {
         <div className="max-w-md mx-auto flex justify-around">
           <button className="flex flex-col items-center gap-1 text-accent-orange">
             <span className="text-2xl">🏠</span>
-            <span className="text-xs font-medium">Dashboard</span>
+            <span className="text-xs font-medium">{t('dashboard')}</span>
           </button>
           <button
             onClick={() => router.push('/schedule')}
             className="flex flex-col items-center gap-1 text-gray-400"
           >
             <span className="text-2xl">📅</span>
-            <span className="text-xs font-medium">Schedule</span>
+            <span className="text-xs font-medium">{t('schedule')}</span>
           </button>
           <button
             onClick={() => {
@@ -224,7 +226,7 @@ export default function TechnicianDashboard() {
             className="flex flex-col items-center gap-1 text-gray-400"
           >
             <span className="text-2xl">🚪</span>
-            <span className="text-xs font-medium">Logout</span>
+            <span className="text-xs font-medium">{t('logout')}</span>
           </button>
         </div>
       </div>

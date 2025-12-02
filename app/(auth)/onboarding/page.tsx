@@ -2,9 +2,11 @@
 
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const { t } = useLanguage()
 
   const handleSelectRole = async (role: 'technician' | 'customer') => {
     const token = localStorage.getItem('token')
@@ -36,8 +38,8 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-navy via-blue-900 to-primary-navy flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-3xl shadow-2xl p-8">
-          <h1 className="text-3xl font-bold text-primary-navy mb-2">Welcome!</h1>
-          <p className="text-gray-600 mb-8">I am a...</p>
+          <h1 className="text-3xl font-bold text-primary-navy mb-2">{t('welcome')}</h1>
+          <p className="text-gray-600 mb-8">{t('iAm')}</p>
 
           <div className="space-y-4">
             {/* Technician Card */}
@@ -51,8 +53,8 @@ export default function OnboardingPage() {
                     <span className="text-5xl">🔧</span>
                   </div>
                   <div className="text-left flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-1">Service Technician</h3>
-                    <p className="text-blue-200 text-sm">I provide services to customers</p>
+                    <h3 className="text-2xl font-bold text-white mb-1">{t('serviceTechnician')}</h3>
+                    <p className="text-blue-200 text-sm">{t('technicianDescription')}</p>
                   </div>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -72,8 +74,8 @@ export default function OnboardingPage() {
                     <span className="text-5xl">👤</span>
                   </div>
                   <div className="text-left flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-1">Customer</h3>
-                    <p className="text-orange-100 text-sm">I need to book services</p>
+                    <h3 className="text-2xl font-bold text-white mb-1">{t('customer')}</h3>
+                    <p className="text-orange-100 text-sm">{t('customerDescription')}</p>
                   </div>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

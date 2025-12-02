@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { format } from 'date-fns'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 type User = {
   id: string
@@ -13,6 +14,7 @@ type User = {
 }
 
 export default function AdminPage() {
+  const { t } = useLanguage()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -63,10 +65,10 @@ export default function AdminPage() {
     }
 
     if (role === 'technician') {
-      return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">🔧 Technician</span>
+      return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">🔧 {t('serviceTechnician')}</span>
     }
 
-    return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">👤 Customer</span>
+    return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">👤 {t('customer')}</span>
   }
 
   if (loading) {
@@ -85,8 +87,8 @@ export default function AdminPage() {
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-navy to-blue-900 text-white p-6 pb-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">Admin Panel</h1>
-          <p className="text-blue-200">Manage all users</p>
+          <h1 className="text-3xl font-bold mb-2">{t('adminPanel')}</h1>
+          <p className="text-blue-200">{t('manageUsers')}</p>
         </div>
       </div>
 
@@ -95,24 +97,24 @@ export default function AdminPage() {
         <div className="grid grid-cols-3 gap-3 mb-6">
           <Card className="text-center py-4">
             <div className="text-2xl font-bold text-primary-navy">{users.length}</div>
-            <div className="text-xs text-gray-500">Total Users</div>
+            <div className="text-xs text-gray-500">{t('totalUsers')}</div>
           </Card>
           <Card className="text-center py-4">
             <div className="text-2xl font-bold text-blue-600">
               {users.filter(u => u.role === 'technician').length}
             </div>
-            <div className="text-xs text-gray-500">Technicians</div>
+            <div className="text-xs text-gray-500">{t('technicians')}</div>
           </Card>
           <Card className="text-center py-4">
             <div className="text-2xl font-bold text-orange-600">
               {users.filter(u => u.role === 'customer').length}
             </div>
-            <div className="text-xs text-gray-500">Customers</div>
+            <div className="text-xs text-gray-500">{t('customers')}</div>
           </Card>
         </div>
 
         {/* User List */}
-        <h2 className="text-lg font-bold text-primary-navy mb-3">All Users</h2>
+        <h2 className="text-lg font-bold text-primary-navy mb-3">{t('allUsers')}</h2>
 
         {users.length === 0 ? (
           <Card className="text-center py-8">
@@ -145,7 +147,7 @@ export default function AdminPage() {
                       isLoading={deletingId === user.id}
                       className="text-status-danger hover:bg-red-50"
                     >
-                      🗑️ Delete
+                      🗑️ {t('delete')}
                     </Button>
                   </div>
                 </div>

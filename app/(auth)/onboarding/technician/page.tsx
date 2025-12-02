@@ -6,26 +6,27 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Chip } from '@/components/ui/Chip'
 import { Toggle } from '@/components/ui/Toggle'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 const SPECIALIZATIONS = [
-  { id: 'ac_repair', label: 'AC Repair', icon: '❄️' },
-  { id: 'ac_installation', label: 'AC Installation', icon: '🔧' },
-  { id: 'ac_maintenance', label: 'AC Maintenance', icon: '🛠️' },
-  { id: 'heating', label: 'Heating', icon: '🔥' },
-  { id: 'refrigeration', label: 'Refrigeration', icon: '🧊' },
-  { id: 'ventilation', label: 'Ventilation', icon: '💨' },
-  { id: 'plumbing', label: 'Plumbing', icon: '🚰' },
-  { id: 'electrical', label: 'Electrical', icon: '⚡' },
+  { id: 'ac_repair', key: 'acRepair' as const, icon: '❄️' },
+  { id: 'ac_installation', key: 'acInstallation' as const, icon: '🔧' },
+  { id: 'ac_maintenance', key: 'acMaintenance' as const, icon: '🛠️' },
+  { id: 'heating', key: 'heating' as const, icon: '🔥' },
+  { id: 'refrigeration', key: 'refrigeration' as const, icon: '🧊' },
+  { id: 'ventilation', key: 'ventilation' as const, icon: '💨' },
+  { id: 'plumbing', key: 'plumbing' as const, icon: '🚰' },
+  { id: 'electrical', key: 'electrical' as const, icon: '⚡' },
 ]
 
 const DAYS = [
-  { id: 'sun', label: 'Sunday' },
-  { id: 'mon', label: 'Monday' },
-  { id: 'tue', label: 'Tuesday' },
-  { id: 'wed', label: 'Wednesday' },
-  { id: 'thu', label: 'Thursday' },
-  { id: 'fri', label: 'Friday' },
-  { id: 'sat', label: 'Saturday' },
+  { id: 'sun', key: 'sunday' as const },
+  { id: 'mon', key: 'monday' as const },
+  { id: 'tue', key: 'tuesday' as const },
+  { id: 'wed', key: 'wednesday' as const },
+  { id: 'thu', key: 'thursday' as const },
+  { id: 'fri', key: 'friday' as const },
+  { id: 'sat', key: 'saturday' as const },
 ]
 
 type WorkingDay = {
@@ -38,6 +39,7 @@ type WorkingHours = Record<string, WorkingDay>
 
 export default function TechnicianOnboardingPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
 
@@ -161,12 +163,12 @@ export default function TechnicianOnboardingPage() {
         {/* Step 1: Basic Info */}
         {step === 1 && (
           <div className="bg-white rounded-3xl shadow-lg p-6">
-            <h1 className="text-2xl font-bold text-primary-navy mb-2">Welcome, Technician!</h1>
-            <p className="text-gray-600 mb-6">Let's set up your profile</p>
+            <h1 className="text-2xl font-bold text-primary-navy mb-2">{t('welcome')}</h1>
+            <p className="text-gray-600 mb-6">{t('setupProfile')}</p>
 
             <div className="space-y-4">
               <Input
-                label="Your Name"
+                label={t('yourName')}
                 placeholder="Enter your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -180,7 +182,7 @@ export default function TechnicianOnboardingPage() {
                 className="w-full"
                 size="lg"
               >
-                Next
+                {t('next')}
               </Button>
             </div>
           </div>
@@ -189,14 +191,14 @@ export default function TechnicianOnboardingPage() {
         {/* Step 2: Specializations */}
         {step === 2 && (
           <div className="bg-white rounded-3xl shadow-lg p-6">
-            <h1 className="text-2xl font-bold text-primary-navy mb-2">Your Specializations</h1>
-            <p className="text-gray-600 mb-6">Select all that apply</p>
+            <h1 className="text-2xl font-bold text-primary-navy mb-2">{t('yourSpecializations')}</h1>
+            <p className="text-gray-600 mb-6">{t('selectAllApply')}</p>
 
             <div className="flex flex-wrap gap-2 mb-6">
               {SPECIALIZATIONS.map(spec => (
                 <Chip
                   key={spec.id}
-                  label={spec.label}
+                  label={t(spec.key)}
                   icon={spec.icon}
                   selected={selectedSpecs.includes(spec.id)}
                   onClick={() => toggleSpec(spec.id)}
@@ -218,14 +220,14 @@ export default function TechnicianOnboardingPage() {
                 className="flex-1"
                 size="lg"
               >
-                Back
+                {t('back')}
               </Button>
               <Button
                 onClick={handleNext}
                 className="flex-1"
                 size="lg"
               >
-                Next
+                {t('next')}
               </Button>
             </div>
           </div>
@@ -234,8 +236,8 @@ export default function TechnicianOnboardingPage() {
         {/* Step 3: Working Hours */}
         {step === 3 && (
           <div className="bg-white rounded-3xl shadow-lg p-6">
-            <h1 className="text-2xl font-bold text-primary-navy mb-2">Working Hours</h1>
-            <p className="text-gray-600 mb-6">Set your availability</p>
+            <h1 className="text-2xl font-bold text-primary-navy mb-2">{t('workingHours')}</h1>
+            <p className="text-gray-600 mb-6">{t('setAvailability')}</p>
 
             <div className="space-y-4">
               {DAYS.map(day => (
@@ -243,7 +245,7 @@ export default function TechnicianOnboardingPage() {
                   <Toggle
                     enabled={workingHours[day.id].enabled}
                     onChange={() => toggleDay(day.id)}
-                    label={day.label}
+                    label={t(day.key)}
                   />
 
                   {workingHours[day.id].enabled && (
@@ -279,7 +281,7 @@ export default function TechnicianOnboardingPage() {
                 className="flex-1"
                 size="lg"
               >
-                Back
+                {t('back')}
               </Button>
               <Button
                 onClick={handleSubmit}
@@ -287,7 +289,7 @@ export default function TechnicianOnboardingPage() {
                 size="lg"
                 isLoading={loading}
               >
-                Complete Setup
+                {t('completeSetup')}
               </Button>
             </div>
           </div>

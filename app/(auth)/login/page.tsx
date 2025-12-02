@@ -5,9 +5,12 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Modal } from '@/components/ui/Modal'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [phoneNumber, setPhoneNumber] = useState('')
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [step, setStep] = useState<'phone' | 'otp'>('phone')
@@ -119,6 +122,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-navy via-blue-900 to-primary-navy flex items-center justify-center p-4">
+      {/* Language Switcher */}
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
+
       <div className="max-w-md w-full">
         {/* Logo/Branding */}
         <div className="text-center mb-8">
@@ -136,13 +144,13 @@ export default function LoginPage() {
           {step === 'phone' ? (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-primary-navy mb-2">Welcome</h2>
+                <h2 className="text-2xl font-bold text-primary-navy mb-2">{t('welcome')}</h2>
                 <p className="text-gray-600">Enter your phone number to continue</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
+                  {t('phoneNumber')}
                 </label>
                 <div className="flex gap-2">
                   <div className="bg-gray-100 px-4 py-3 rounded-lg border-2 border-gray-200 text-lg font-medium text-gray-700 flex items-center">
@@ -173,13 +181,13 @@ export default function LoginPage() {
                 className="w-full"
                 size="lg"
               >
-                Send Code
+                {t('sendCode')}
               </Button>
             </div>
           ) : (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-primary-navy mb-2">Enter Code</h2>
+                <h2 className="text-2xl font-bold text-primary-navy mb-2">{t('enterCode')}</h2>
                 <p className="text-gray-600">
                   We sent a 6-digit code to<br />
                   <span className="font-semibold text-primary-navy">05-{phoneNumber}</span>
@@ -217,7 +225,7 @@ export default function LoginPage() {
                 className="w-full"
                 size="lg"
               >
-                Verify
+                {t('verify')}
               </Button>
 
               <button
@@ -230,7 +238,7 @@ export default function LoginPage() {
                 className="w-full text-sm text-gray-600 hover:text-primary-navy transition-colors"
                 disabled={isLoading}
               >
-                Change phone number
+                {t('changePhoneNumber')}
               </button>
             </div>
           )}

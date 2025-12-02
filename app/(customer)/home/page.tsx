@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { format } from 'date-fns'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 type Job = {
   id: string
@@ -24,6 +25,7 @@ type Customer = {
 
 export default function CustomerHome() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(true)
   const [customer, setCustomer] = useState<Customer | null>(null)
   const [jobs, setJobs] = useState<Job[]>([])
@@ -131,7 +133,7 @@ export default function CustomerHome() {
       {/* Header */}
       <div className="bg-gradient-to-br from-accent-orange to-orange-600 text-white p-6 pb-8">
         <div className="max-w-md mx-auto">
-          <h1 className="text-2xl font-bold mb-1">Hello, {customer?.name}! 👋</h1>
+          <h1 className="text-2xl font-bold mb-1">{t('greeting', { name: customer?.name || 'Customer' })}</h1>
           <p className="text-orange-100 text-sm">Request service and track your jobs</p>
         </div>
       </div>
@@ -141,10 +143,10 @@ export default function CustomerHome() {
         {!showRequestForm && (
           <Card className="mb-6 text-center py-6">
             <div className="text-5xl mb-3">🔧</div>
-            <h2 className="text-lg font-bold text-primary-navy mb-2">Need Service?</h2>
-            <p className="text-sm text-gray-600 mb-4">Request AC repair, installation, or maintenance</p>
+            <h2 className="text-lg font-bold text-primary-navy mb-2">{t('needService')}</h2>
+            <p className="text-sm text-gray-600 mb-4">{t('serviceDescription')}</p>
             <Button onClick={() => setShowRequestForm(true)} size="lg">
-              Request Service
+              {t('requestService')}
             </Button>
           </Card>
         )}
@@ -152,11 +154,11 @@ export default function CustomerHome() {
         {/* Request Service Form */}
         {showRequestForm && (
           <Card className="mb-6">
-            <h2 className="text-lg font-bold text-primary-navy mb-4">Request Service</h2>
+            <h2 className="text-lg font-bold text-primary-navy mb-4">{t('requestService')}</h2>
             <form onSubmit={handleRequestService}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Service Address
+                  {t('serviceAddress')}
                 </label>
                 <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
                   📍 {customer?.address}
@@ -165,7 +167,7 @@ export default function CustomerHome() {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  What do you need? <span className="text-status-danger">*</span>
+                  {t('whatNeed')} <span className="text-status-danger">*</span>
                 </label>
                 <textarea
                   placeholder="Describe the service you need (e.g., 'AC not cooling', 'Need AC installation')"
@@ -187,10 +189,10 @@ export default function CustomerHome() {
                   }}
                   className="flex-1"
                 >
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button type="submit" isLoading={submitting} className="flex-1">
-                  Submit Request
+                  {t('submit')}
                 </Button>
               </div>
             </form>
@@ -199,12 +201,12 @@ export default function CustomerHome() {
 
         {/* Job History */}
         <div className="mb-6">
-          <h2 className="text-lg font-bold text-primary-navy mb-3">Your Jobs</h2>
+          <h2 className="text-lg font-bold text-primary-navy mb-3">{t('yourJobs')}</h2>
 
           {jobs.length === 0 ? (
             <Card className="text-center py-8">
               <div className="text-4xl mb-2">📋</div>
-              <p className="text-gray-500">No service requests yet</p>
+              <p className="text-gray-500">{t('noRequests')}</p>
               <p className="text-sm text-gray-400 mt-1">Your job history will appear here</p>
             </Card>
           ) : (
@@ -236,11 +238,11 @@ export default function CustomerHome() {
         <div className="max-w-md mx-auto flex justify-around">
           <button className="flex flex-col items-center gap-1 text-accent-orange">
             <span className="text-2xl">🏠</span>
-            <span className="text-xs font-medium">Home</span>
+            <span className="text-xs font-medium">{t('home')}</span>
           </button>
           <button className="flex flex-col items-center gap-1 text-gray-400">
             <span className="text-2xl">📋</span>
-            <span className="text-xs font-medium">Jobs</span>
+            <span className="text-xs font-medium">{t('jobs')}</span>
           </button>
           <button
             onClick={() => {
@@ -250,7 +252,7 @@ export default function CustomerHome() {
             className="flex flex-col items-center gap-1 text-gray-400"
           >
             <span className="text-2xl">🚪</span>
-            <span className="text-xs font-medium">Logout</span>
+            <span className="text-xs font-medium">{t('logout')}</span>
           </button>
         </div>
       </div>

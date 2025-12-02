@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function CustomerOnboardingPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
@@ -56,12 +58,12 @@ export default function CustomerOnboardingPage() {
     <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-3xl shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-primary-navy mb-2">Welcome!</h1>
-          <p className="text-gray-600 mb-8">Let's set up your profile</p>
+          <h1 className="text-3xl font-bold text-primary-navy mb-2">{t('welcome')}</h1>
+          <p className="text-gray-600 mb-8">{t('setupProfile')}</p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
-              label="Your Name"
+              label={t('yourName')}
               placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -70,7 +72,7 @@ export default function CustomerOnboardingPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Default Address <span className="text-status-danger">*</span>
+                {t('defaultAddress')} <span className="text-status-danger">*</span>
               </label>
               <textarea
                 placeholder="Enter your address"
@@ -95,7 +97,7 @@ export default function CustomerOnboardingPage() {
               size="lg"
               isLoading={loading}
             >
-              Complete Setup
+              {t('completeSetup')}
             </Button>
           </form>
         </div>
