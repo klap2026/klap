@@ -97,6 +97,27 @@ export async function POST(request: Request) {
       )
     }
 
+    // Verify the user owns this customer ID
+    const { data: customer, error: customerError } = await supabase
+      .from('Customer')
+      .select('userId')
+      .eq('id', customerId)
+      .single()
+
+    if (customerError || !customer) {
+      return NextResponse.json(
+        { error: 'Customer not found' },
+        { status: 404 }
+      )
+    }
+
+    if (customer.userId !== userId) {
+      return NextResponse.json(
+        { error: 'Forbidden: You do not have access to this customer' },
+        { status: 403 }
+      )
+    }
+
     const { data: job, error } = await supabase
       .from('Job')
       .insert({
