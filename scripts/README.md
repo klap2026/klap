@@ -90,27 +90,29 @@ node scripts/generate-token.mjs
 
 ### Important: Multi-User Testing
 
-When you visit a URL with `?token=...`, the middleware automatically sets a session cookie. This means:
-- ✅ You can navigate freely without needing the token in every URL
-- ⚠️ **Cookies are shared across all tabs** - you can't have two different users in regular tabs
+The query string token (`?token=...`) is checked on **every request** and does NOT set a cookie. This means:
+- ⚠️ You must keep `?token=...` in the URL for navigation to work
+- ✅ Each tab can have its own token in the URL - true multi-user testing!
+- ✅ No cookie conflicts between tabs
 
-**For true multi-user testing:**
+**For multi-user testing in the same browser:**
 ```bash
 # 1. Generate tokens
 node scripts/generate-token.mjs +972501111111  # Technician
 node scripts/generate-token.mjs +972502222222  # Customer
 
-# 2. Open FIRST user in a REGULAR window
+# 2. Open tabs with different tokens
+# Tab 1 - Technician
 open "http://localhost:3000/dashboard?token=<TECH_TOKEN>"
 
-# 3. Open SECOND user in an INCOGNITO window
-open -na "Google Chrome" --args --incognito "http://localhost:3000/home?token=<CUSTOMER_TOKEN>"
-# OR use a different browser for the second user
+# Tab 2 - Customer (same browser!)
+open "http://localhost:3000/home?token=<CUSTOMER_TOKEN>"
 
-# 4. Now you can test as both users without interference!
+# 3. Keep the token in the URL when navigating
+# The middleware checks the query string on every request
 ```
 
-**Why?** Browser cookies are shared across all tabs, so the last tab you visit sets the auth for ALL tabs.
+**Important:** When clicking links in your app, you'll need to include the `?token=...` parameter in the URL to maintain authentication. Without it, the middleware will redirect to login.
 
 ## Troubleshooting
 
