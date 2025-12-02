@@ -1,28 +1,24 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
  * Generate JWT tokens for development testing
  *
- * Usage:
- *   npx tsx scripts/generate-token.ts <phone-number>
- *   npx tsx scripts/generate-token.ts +972501234567
- *
- * This script:
- * 1. Looks up the user by phone number in the database
- * 2. Generates a valid JWT token
- * 3. Prints the token and a ready-to-use URL
+ * This uses .mjs to ensure dotenv loads BEFORE any imports
  */
 
 import { config } from 'dotenv'
 import { resolve } from 'path'
-import { createClient } from '@supabase/supabase-js'
-import { signToken } from '../lib/auth/jwt'
 
-// Load environment variables from .env.local
+// CRITICAL: Load .env FIRST before any other imports
 config({ path: resolve(process.cwd(), '.env.local') })
 
-// Create Supabase client after loading env vars
+// Now import everything else
+import { createClient } from '@supabase/supabase-js'
+import { SignJWT } from 'jose'
+
+// Create Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY
+const jwtSecret = process.env.JWT_SECRET || 'dev-secret-key'
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error('❌ Missing Supabase environment variables in .env.local')
@@ -37,7 +33,16 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   }
 })
 
-async function generateToken(phone: string) {
+async function signToken(payload) {
+  const secret = new TextEncoder().encode(jwtSecret)
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('30d')
+    .sign(secret)
+}
+
+async function generateToken(phone) {
   try {
     // Find user by phone
     console.log(`🔍 Looking up user with phone: ${phone}`)
@@ -98,8 +103,8 @@ async function generateToken(phone: string) {
 const phone = process.argv[2]
 
 if (!phone) {
-  console.log('Usage: npx tsx scripts/generate-token.ts <phone-number>')
-  console.log('Example: npx tsx scripts/generate-token.ts +972501234567')
+  console.log('Usage: node scripts/generate-token.mjs <phone-number>')
+  console.log('Example: node scripts/generate-token.mjs +972501234567')
   process.exit(1)
 }
 

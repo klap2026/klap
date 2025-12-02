@@ -9,13 +9,13 @@ Helper scripts for local development and testing.
 Generate a token directly from the database without going through the OTP flow:
 
 ```bash
-npx tsx scripts/generate-token.ts <phone-number>
+node scripts/generate-token.mjs <phone-number>
 ```
 
 **Example:**
 ```bash
 # If you have a user with phone +972501234567
-npx tsx scripts/generate-token.ts +972501234567
+node scripts/generate-token.mjs +972501234567
 
 # Output:
 # ✅ Found user: John Doe (technician)
@@ -69,7 +69,7 @@ Get a token by going through the normal OTP authentication flow:
 
 ```bash
 # See all users using the token script (it will list them if you provide invalid phone)
-npx tsx scripts/generate-token.ts invalid
+node scripts/generate-token.mjs invalid
 
 # Or check Supabase dashboard
 # Visit: https://supabase.com/dashboard/project/YOUR_PROJECT/editor
@@ -81,7 +81,7 @@ psql $DATABASE_URL -c "SELECT phone, role, name FROM users;"
 ### Run the token script without arguments
 
 ```bash
-npx tsx scripts/generate-token.ts
+node scripts/generate-token.mjs
 
 # Will show usage and suggest checking database
 ```
@@ -90,8 +90,8 @@ npx tsx scripts/generate-token.ts
 
 ```bash
 # 1. Generate tokens for two different users
-npx tsx scripts/generate-token.ts +972501111111  # Technician
-npx tsx scripts/generate-token.ts +972502222222  # Customer
+node scripts/generate-token.mjs +972501111111  # Technician
+node scripts/generate-token.mjs +972502222222  # Customer
 
 # 2. Copy the tokens from output
 
@@ -114,7 +114,7 @@ open "http://localhost:3000/home?token=<CUSTOMER_TOKEN>"
 # Install tsx globally or use npx
 npm install -g tsx
 # OR just use npx (it will auto-install)
-npx tsx scripts/generate-token.ts
+node scripts/generate-token.mjs
 ```
 
 ### "jq: command not found" (for get-dev-token.sh)
