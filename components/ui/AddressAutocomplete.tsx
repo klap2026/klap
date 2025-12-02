@@ -67,7 +67,8 @@ export function AddressAutocomplete({
     }, 300)
 
     return () => clearTimeout(timer)
-  }, [inputValue, fetchPredictions, clearPredictions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue])
 
   // Handle clicks outside
   useEffect(() => {
